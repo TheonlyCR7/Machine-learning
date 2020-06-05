@@ -19,19 +19,19 @@ numpyArray.dtype
 ### `numpy.zeros()` 方法
 
 ```python
-# 创建一个都为零的数组
+# 创建一个都为零的数组  浮点型
 numpyArray1 = numpy.zeros(10)
 numpyArray1.dtype
 # [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
 # float64
 
-# 创建一个都为零的二维数组
+# 创建一个都为零的二维数组   浮点型
 numpyArray2 = numpy.zeros((3,4))
 # [[0. 0. 0. 0.]
 #  [0. 0. 0. 0.]
 #  [0. 0. 0. 0.]]
 
-# 具体
+# 具体     3行4列的整型数组
 numpyArray3 = numpy.zeros(shape=(3,4), dtype=int)
 # [[0 0 0 0]
 #  [0 0 0 0]
@@ -59,14 +59,14 @@ numpyArray6 = numpy.full(shape=(3, 4), fill_value=11)
 
 ### `arange` 方法
 
-与 range 方法相同
+与 range 方法相同，但效率更高
 
 ```python
 numpyArray7 = numpy.arange(0, 20, 1)
 # [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]
 ```
 
-不同的是，`arange` 中的步长(第三个参数)可以为浮点数
+不同的是，`arange` 中的步长(第三个参数)可以为**浮点数**
 
 ```python
 numpyArray7 = numpy.arange(0, 3, 0.2)
@@ -88,7 +88,13 @@ numpyArray8 = numpy.linspace(0, 20, 5)
 
 ### `random`  方法
 
-生成随机数
+生成100个元素的随机数组 （元素在0-1之间）
+
+```python
+numpyArray = numpy.random.random(100)
+```
+
+生成随机数   **前闭后开**
 
 ```python
 numpyArray9 = numpy.random.randint(0, 10)
@@ -115,7 +121,7 @@ numpyArray10 = numpy.random.randint(0, 10, 5)
 
 
 
-符合正态分布的浮点数
+符合**正态分布**的浮点数
 
 ```python
 # 默认值为 符合均值为0 方差为1 的正态分布
@@ -242,6 +248,8 @@ numpyArray3
 
 ###   `.vstack`
 
+vertical   stack
+
 可以智能处理维度不同的向量在**竖直方向上**的合并（前提是列数保持一致）
 
 ```python
@@ -266,7 +274,9 @@ numpyArray2
 
 
 
-### `.hstack` 
+### `.hstack`
+
+horizontal  stack
 
 可以智能处理维度不同的向量在**水平方向上**的合并（前提是行数保持一致）
 
@@ -536,4 +546,253 @@ B = v.dot(A)
 
 
 ## 聚合操作
+
+`numpy.sum()`  数组求和操作   比内置的 sum 要快得多
+
+```python
+
+import numpy
+numpyArray = numpy.random.rand(100000)
+
+%timeit sum(numpyArray)
+# 18.4 ms ± 526 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+
+%timeit numpy.sum(numpyArray)
+# 55.5 µs ± 911 ns per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+```
+
+其他函数  `.min()   .max()`    也可以采用对象的方式调用
+
+```python
+numpyArray.min()
+numpyArray.max()
+numpyArray.sum()
+```
+
+求每列的总和  axis = 0
+
+```python
+x = numpy.arange(16).reshape(4,-1)
+numpy.sum(x, axis=0)  # 设置axis的值
+# array([24, 28, 32, 36])
+```
+
+求每一行的总和   axis = 1
+
+```python
+numpy.sum(x, axis=1)
+# array([ 6, 22, 38, 54])
+```
+
+
+
+### `.prod(x)`
+
+所有元素的乘积
+
+```python
+numpy.prod(numpyArray)
+```
+
+对每个元素加一
+
+```python
+numpy.prod(numpyArray + 1)
+```
+
+### `.mean  .median`
+
+求平均值   求中位数
+
+```python
+numpy.mean(numpyArray)
+numpy.median(numpyArray)
+```
+
+### `.var()   .std()`
+
+求方差     求标准差
+
+```python
+numpy.var(numpyArray)
+numpy.std(numpyArray)
+```
+
+
+
+## 索引
+
+求最小值的索引
+
+```python
+numpy.argmin(x)
+```
+
+
+
+## 排序和使用索引
+
+`.shuffle()`  将数组打乱
+
+```python
+x = numpy.arange(16)
+numpy.random.shuffle(x)
+# array([15,  4, 12,  6, 13,  0,  5,  8, 10, 14,  9,  3, 11,  7,  1,  2])
+
+# 没有对数组本身进行排序
+numpy.sort(x)
+# array([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15])
+
+# 数组 x 未变
+# array([15,  4, 12,  6, 13,  0,  5,  8, 10, 14,  9,  3, 11,  7,  1,  2])
+
+# 改变数组，给数组排序
+x.sort()
+# array([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15])
+```
+
+对多维数组进行排序
+
+```python
+x = numpy.random.randint(10, size=(4,4))
+# array([[1, 7, 3, 3],
+#        [5, 0, 2, 2],
+#        [9, 0, 2, 2],
+#        [3, 9, 9, 5]])
+
+默认情况是对每一行进行排序
+numpy.sort(x)
+# array([[1, 3, 3, 7],
+#        [0, 2, 2, 5],
+#        [0, 2, 2, 9],
+#        [3, 5, 9, 9]])
+
+对每一行进行排序
+numpy.sort(x, axis=1)
+# array([[1, 3, 3, 7],
+#        [0, 2, 2, 5],
+#        [0, 2, 2, 9],
+#        [3, 5, 9, 9]])
+
+对每一列进行排序
+numpy.sort(x, axis=0)
+# array([[1, 0, 2, 2],
+#        [3, 0, 2, 2],
+#        [5, 7, 3, 3],
+#        [9, 9, 9, 5]])
+```
+
+`.argsort() `   根据大小，按照元素的大小顺序将元素索引排列出来
+
+```python
+x = numpy.arange(16)
+numpy.random.shuffle(x)
+numpy.argsort(x)
+# array([12,  3,  6,  4,  8, 11, 13, 14, 10,  9,  0,  1,  2,  7,  5, 15],dtype=int64)
+```
+
+`.partition()`  将数组分割
+
+```python
+# 比3小的元素都在左边，比3大的元素都在右边   左右无序
+numpy.partition(x, 3)
+# array([ 1,  0,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15])
+```
+
+`.argpartition()`  与 `.argsort() `  同理  返回的都是索引值
+
+```python
+numpy.argpartition(x, 3)
+# array([ 3, 12,  6,  4,  8, 11, 13, 14, 10,  9,  0,  1,  2,  7,  5, 15],dtype=int64)
+```
+
+
+
+## Fancy Indexing
+
+```python
+x = numpy.arange(10)
+array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+ind = [3, 5, 8]  # 将索引放到一个数组中  索引数组也可以是多维的
+print(x[ind])  
+# array([3, 5, 8])
+```
+
+对多维索引数组的操作
+
+```python
+numpyArray12 = numpy.random.randint(0, 20, (4,4))
+numpyArray12
+# array([[ 7, 10, 14, 15],
+#        [15, 10, 14, 15],
+#        [15, 14, 16, 19],
+#        [ 2,  0,  7, 17]])
+
+row = numpy.array([0,1,2])  # 行
+col = numpy.array([1,2, 3])  # 列
+# 通过二维索引定位元素
+print(numpyArray12[row,col])
+# array([10, 14, 19])
+```
+
+可以通过布尔值来创建索引数组
+
+```python
+clo = [True, False, True, False]
+# 表示  [0, 2, 3]
+```
+
+
+
+## 比较运算符
+
+返回该位置的比较结果（布尔值）
+
+```python
+> < == !=  >= <=
+```
+
+```python
+print(numpyArray12 > 2)
+# array([[ True,  True,  True,  True],
+#        [ True,  True,  True,  True],
+#        [ True,  True,  True,  True],
+#        [False, False,  True,  True]])
+
+print(numpyArray12 < 2)
+# array([[False, False, False, False],
+#        [False, False, False, False],
+#        [False, False, False, False],
+#        [False,  True, False, False]])
+```
+
+```python
+numpy.sum(x < 3)
+# 获取数组中小于3的元素数量
+numpy.count_nonzero(x)
+# 数组中非零元素的个数
+numpy.any(x == 0)
+# 是否存在等于0 的元素  返回布尔值
+numpy.all(x > 0)
+# 判断是否都大于零   返回布尔值
+```
+
+一些技巧
+
+```python
+# 求有多少偶数
+numpy.sum(x % 2 == 0)
+# 以一行为单位，每一行有多少偶数
+numpy.sum(x % 2 == 0, axis=1)
+# 以一列为单位，每一列有多少偶数
+numpy.sum(x % 2 == 0, axis=0)
+# 可以使用 & | ~ 符号    位运算符
+numpy.sum((x > 3) & (x < 10))
+# 非运算符   元素不等于零的个数
+numpy.sum(~(x == 0))
+```
+
+```python
+x[x < 5]  # 小于5 的所有元素
+```
 
