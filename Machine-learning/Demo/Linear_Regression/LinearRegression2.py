@@ -1,10 +1,13 @@
-from datetime import time
+from time import time
 
 import numpy as np
 
 
 # 封装自己实现的算法
 # 通过向量化运算来优化  主要修改fit函数
+from Linear_Regression.LinearRegression1 import SimpleLinearRegression1
+
+
 class SimpleLinearRegression2:
 
     def __init__(self):
@@ -56,7 +59,21 @@ class SimpleLinearRegression2:
 
 
 if __name__ == "__main__":
-    m = 10000
-    big_x = np.random.randint(m)
+    m = 10000000
+    big_x = np.random.random(size=m)
     big_y = big_x * 2 + 3 + np.random.normal(size=m)
-    start_time1 = time.time()
+    # 创建实例对象
+    reg1 = SimpleLinearRegression1()
+    reg2 = SimpleLinearRegression2()
+
+    start_time1 = time()
+    reg1.fit(big_x, big_y)
+    end_time1 = time()
+
+    start_time2 = time()
+    reg2.fit(big_x, big_y)
+    end_time2 = time()
+
+    print("优化前的算法: ", format(end_time1 - start_time1))
+    print("优化后的算法: ", format(end_time2 - start_time2))
+

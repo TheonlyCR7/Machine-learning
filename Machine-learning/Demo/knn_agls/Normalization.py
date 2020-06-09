@@ -1,8 +1,4 @@
 import numpy as np
-import matplotlib
-import matplotlib.pyplot as plt
-from sklearn import datasets
-from sklearn.neighbors import KNeighborsClassifier
 
 
 # 实现最值归一化
