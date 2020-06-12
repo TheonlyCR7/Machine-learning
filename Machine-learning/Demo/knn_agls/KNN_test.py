@@ -30,12 +30,12 @@ def train_test_split(X, y, test_ratio=0.2, seed=None):
     X_test = X[test_indexes]
     y_test = y[test_indexes]
 
-    my_knn_clf = KNNClassifier(k=3)
-    my_knn_clf.fit(X_train, y_train)
-    y_predict = my_knn_clf.predict(X_test)
-
-    print("KNN数据预测成功个数：" + str(sum(y_predict == y_test)) + " / " + str(len(y_test)))
-    print("KNN数据预测的准确百分比：" + str(sum(y_predict == y_test) / len(y_test)))
+    # my_knn_clf = KNNClassifier(k=3)
+    # my_knn_clf.fit(X_train, y_train)
+    # y_predict = my_knn_clf.predict(X_test)
+    #
+    # print("KNN数据预测成功个数：" + str(sum(y_predict == y_test)) + " / " + str(len(y_test)))
+    # print("KNN数据预测的准确百分比：" + str(sum(y_predict == y_test) / len(y_test)))
 
     return X_train, X_test, y_train, y_test
 
